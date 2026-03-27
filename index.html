@@ -10,63 +10,82 @@
     <link rel="icon" type="image/png" href="icono-192.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 min-h-screen pb-32">
+<body class="bg-slate-100 min-h-screen pb-36">
 
     <nav class="bg-[#DA291C] text-white p-4 shadow-md sticky top-0 z-40 flex justify-between items-center">
-        <div>
-            <h1 class="text-lg font-bold leading-tight">Servicios CR</h1>
-            <select id="selectAnio" onchange="cambiarAnioActivo()" class="bg-[#B21C14] text-xs border-none rounded px-2 py-1 outline-none font-bold"></select>
+        <div class="flex flex-col">
+            <h1 class="text-lg font-bold">Servicios CR</h1>
+            <select id="selectAnio" onchange="cambiarAnioActivo()" class="bg-[#B21C14] text-white text-xs font-bold rounded px-2 py-1 outline-none mt-1 border-none shadow-inner">
+                </select>
         </div>
-        <button onclick="abrirModal()" class="bg-white text-[#DA291C] p-2 rounded-full shadow-lg w-10 h-10 flex items-center justify-center">
-            <i class="fas fa-user-plus"></i>
+        <button onclick="abrirModal()" class="bg-white text-[#DA291C] w-12 h-12 rounded-full shadow-xl flex items-center justify-center active:scale-90 transition-transform">
+            <i class="fas fa-user-plus text-xl"></i>
         </button>
     </nav>
 
-    <div id="lista-voluntarios" class="p-4 space-y-3"></div>
+    <div id="lista-voluntarios" class="p-4 space-y-3">
+        </div>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40 p-2">
-        <div class="flex justify-around mb-2 border-b pb-2">
-            <button onclick="nuevoAnio()" class="text-[#DA291C] text-[10px] font-bold uppercase flex flex-col items-center">
-                <i class="fas fa-calendar-plus text-lg mb-1"></i>Nuevo Año
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-5px_15px_rgba(0,0,0,0.1)] z-50">
+        <div class="flex justify-around py-3 border-b border-gray-100">
+            <button onclick="nuevoAnio()" class="flex flex-col items-center group">
+                <i class="fas fa-calendar-plus text-[#DA291C] text-xl group-active:scale-90 transition-transform"></i>
+                <span class="text-[10px] font-bold text-gray-500 uppercase mt-1">Nuevo Año</span>
             </button>
-            <button onclick="exportarExcel()" class="text-green-700 text-[10px] font-bold uppercase flex flex-col items-center">
-                <i class="fas fa-file-excel text-lg mb-1"></i>Excel
+            <button onclick="exportarExcel()" class="flex flex-col items-center group">
+                <i class="fas fa-file-excel text-green-700 text-xl group-active:scale-90 transition-transform"></i>
+                <span class="text-[10px] font-bold text-gray-500 uppercase mt-1">Excel</span>
             </button>
         </div>
-        <div class="flex justify-around">
-            <button onclick="backupDownload()" class="text-blue-600 text-[9px] font-bold uppercase flex flex-col items-center">
-                <i class="fas fa-download text-lg mb-1"></i>Guardar Copia
+        <div class="flex justify-around py-3 bg-gray-50">
+            <button onclick="backupDownload()" class="flex flex-col items-center group">
+                <i class="fas fa-cloud-download-alt text-blue-600 text-xl group-active:scale-90 transition-transform"></i>
+                <span class="text-[9px] font-bold text-gray-400 uppercase mt-1">Guardar Copia</span>
             </button>
-            <button onclick="document.getElementById('fileInput').click()" class="text-orange-600 text-[9px] font-bold uppercase flex flex-col items-center">
-                <i class="fas fa-upload text-lg mb-1"></i>Cargar Copia
+            <button onclick="document.getElementById('fileInput').click()" class="flex flex-col items-center group">
+                <i class="fas fa-cloud-upload-alt text-orange-600 text-xl group-active:scale-90 transition-transform"></i>
+                <span class="text-[9px] font-bold text-gray-400 uppercase mt-1">Cargar Copia</span>
             </button>
             <input type="file" id="fileInput" class="hidden" accept=".json" onchange="backupUpload(event)">
         </div>
     </div>
 
-    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg w-full max-w-sm p-6 shadow-2xl">
-            <h3 id="modal-titulo" class="text-xl font-bold mb-4 text-gray-800"></h3>
+    <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 id="modal-titulo" class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Nuevo Voluntario</h3>
             <input type="hidden" id="edit-id">
             <div class="space-y-4">
-                <input type="text" id="input-nombre" placeholder="Nombre Voluntario" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-[#DA291C] outline-none">
-                <input type="text" id="input-cargo" placeholder="Cargo (TES, DUE...)" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-[#DA291C] outline-none">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nombre y Apellidos</label>
+                    <input type="text" id="input-nombre" placeholder="Ej: Juan Pérez" class="w-full border-2 border-gray-100 p-3 rounded-xl focus:border-[#DA291C] outline-none transition-colors">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Cargo / Rol</label>
+                    <input type="text" id="input-cargo" placeholder="Ej: TES / ENFERMERO" class="w-full border-2 border-gray-100 p-3 rounded-xl focus:border-[#DA291C] outline-none transition-colors">
+                </div>
             </div>
-            <div class="flex justify-end mt-8 space-x-2">
-                <button onclick="cerrarModal()" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg font-bold text-sm">Cancelar</button>
-                <button id="btn-eliminar" onclick="eliminarVoluntario()" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold text-sm hidden">Eliminar</button>
-                <button onclick="guardarVoluntario()" class="bg-[#DA291C] text-white px-6 py-2 rounded-lg font-bold shadow-md">Guardar</button>
+            <div class="flex justify-between items-center mt-8 pt-4">
+                <button id="btn-eliminar" onclick="eliminarVoluntario()" class="text-red-500 font-bold text-sm px-2 py-2 hidden">Eliminar</button>
+                <div class="flex space-x-2 ml-auto">
+                    <button onclick="cerrarModal()" class="bg-gray-100 text-gray-500 px-4 py-2 rounded-xl font-bold text-sm">Cerrar</button>
+                    <button onclick="guardarVoluntario()" class="bg-[#DA291C] text-white px-6 py-2 rounded-xl font-bold shadow-lg active:scale-95 transition-transform">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         const DB_KEY = 'cr_v3';
-        let db = JSON.parse(localStorage.getItem(DB_KEY)) || {
-            anios: [2024, 2025, 2026],
-            anioActivo: 2026,
-            voluntarios: []
-        };
+        
+        // Carga inicial segura
+        let db = { anios: [2024, 2025, 2026], anioActivo: 2026, voluntarios: [] };
+        try {
+            const saved = localStorage.getItem(DB_KEY);
+            if(saved) {
+                const parsed = JSON.parse(saved);
+                if(parsed.anios && parsed.anios.length > 0) db = parsed;
+            }
+        } catch(e) { console.error("Error cargando DB"); }
 
         function save() {
             localStorage.setItem(DB_KEY, JSON.stringify(db));
@@ -76,55 +95,19 @@
         function render() {
             const list = document.getElementById('lista-voluntarios');
             const sel = document.getElementById('selectAnio');
+            
+            // Actualizar Selector de Años
             sel.innerHTML = db.anios.map(a => `<option value="${a}" ${a==db.anioActivo?'selected':''}>AÑO ${a}</option>`).join('');
 
             if(db.voluntarios.length === 0) {
-                list.innerHTML = `<div class="text-center py-20"><i class="fas fa-users text-4xl text-gray-200 mb-4"></i><p class="text-gray-400">No hay datos.<br>Añade un voluntario o carga una copia.</p></div>`;
+                list.innerHTML = `<div class="text-center py-20 text-gray-300 italic"><i class="fas fa-hand-holding-heart text-6xl mb-4 opacity-20"></i><p>Pulsa el botón + para añadir voluntarios</p></div>`;
                 return;
             }
 
-            list.innerHTML = db.voluntarios.sort((a,b) => a.nombre.localeCompare(b.nombre)).map(v => `
-                <div class="bg-white rounded-xl shadow-sm p-4 flex justify-between items-center border-l-4 border-[#DA291C] active:bg-gray-50 transition-colors">
-                    <div onclick="abrirModal(${v.id})" class="flex-grow pr-4">
-                        <h2 class="font-bold text-gray-800 leading-tight">${v.nombre}</h2>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">${v.cargo}</p>
-                        <div class="mt-1 text-2xl font-black text-[#DA291C]">${v.records[db.anioActivo] || 0}</div>
-                    </div>
-                    <button onclick="sumarUno(${v.id})" class="bg-[#DA291C] text-white w-14 h-14 rounded-2xl shadow-lg flex items-center justify-center active:scale-95 transition-transform">
-                        <i class="fas fa-plus text-xl"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function sumarUno(id) {
-            const v = db.voluntarios.find(x => x.id === id);
-            v.records[db.anioActivo] = (v.records[db.anioActivo] || 0) + 1;
-            if(navigator.vibrate) navigator.vibrate(40);
-            save();
-        }
-
-        function abrirModal(id = null) {
-            document.getElementById('modal').classList.remove('hidden');
-            const btnEliminar = document.getElementById('btn-eliminar');
-            if(id) {
-                const v = db.voluntarios.find(x => x.id === id);
-                document.getElementById('edit-id').value = id;
-                document.getElementById('input-nombre').value = v.nombre;
-                document.getElementById('input-cargo').value = v.cargo;
-                document.getElementById('modal-titulo').innerText = "Editar Voluntario";
-                btnEliminar.classList.remove('hidden');
-            } else {
-                document.getElementById('edit-id').value = '';
-                document.getElementById('input-nombre').value = '';
-                document.getElementById('input-cargo').value = '';
-                document.getElementById('modal-titulo').innerText = "Nuevo Voluntario";
-                btnEliminar.classList.add('hidden');
-            }
-        }
-
-        function cerrarModal() { document.getElementById('modal').classList.add('hidden'); }
-
-        function guardarVoluntario() {
-            const id = document.getElementById('edit-id').value;
-            const n = document.getElementById('
+            // Ordenar y mostrar lista
+            const listaOrdenada = [...db.voluntarios].sort((a,b) => a.nombre.localeCompare(b.nombre));
+            list.innerHTML = listaOrdenada.map(v => `
+                <div class="bg-white rounded-2xl shadow-sm p-4 flex justify-between items-center border-l-[6px] border-[#DA291C] active:bg-gray-50 transition-all">
+                    <div onclick="abrirModal(${v.id})" class="flex-grow">
+                        <h2 class="font-bold text-gray-800 text-lg">${v.nombre}</h2>
+                        <p class="text-[10px] text-gray-400 font-black uppercase tracking-

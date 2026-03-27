@@ -7,114 +7,76 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .modal { transition: opacity 0.25s ease; }
-        body.modal-active { overflow: hidden; }
-    </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
 
     <nav class="bg-[#DA291C] text-white p-4 shadow-md sticky top-0 z-40 flex justify-between items-center">
         <div>
             <h1 class="text-lg font-bold leading-tight">Servicios CR</h1>
-            <select id="selectAnio" onchange="cambiarAnioActivo()" class="bg-[#B21C14] text-xs border-none rounded px-2 py-1 outline-none">
-                </select>
+            <select id="selectAnio" onchange="cambiarAnioActivo()" class="bg-[#B21C14] text-xs border-none rounded px-2 py-1 outline-none text-white font-bold"></select>
         </div>
-        <button onclick="abrirModal()" class="bg-white text-[#DA291C] p-2 rounded-full shadow-lg">
+        <button onclick="abrirModal()" class="bg-white text-[#DA291C] p-2 rounded-full shadow-lg w-10 h-10 flex items-center justify-center">
             <i class="fas fa-user-plus"></i>
         </button>
     </nav>
 
-    <div id="lista-voluntarios" class="p-4 space-y-3">
-        </div>
+    <div id="lista-voluntarios" class="p-4 space-y-3"></div>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-around items-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-        <button onclick="nuevoAnio()" class="text-[#DA291C] text-xs font-bold uppercase flex flex-col items-center">
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-around items-center shadow-lg">
+        <button onclick="nuevoAnio()" class="text-[#DA291C] text-[10px] font-bold uppercase flex flex-col items-center">
             <i class="fas fa-calendar-plus text-xl mb-1"></i>Nuevo Año
         </button>
-        <button onclick="exportarCSV()" class="text-green-600 text-xs font-bold uppercase flex flex-col items-center">
-            <i class="fas fa-file-excel text-xl mb-1"></i>Exportar
+        <button onclick="exportarExcel()" class="text-green-700 text-[10px] font-bold uppercase flex flex-col items-center">
+            <i class="fas fa-file-excel text-xl mb-1"></i>Exportar Excel
         </button>
     </div>
 
-    <div id="modal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
-        <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
-        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
-            <div class="modal-content py-4 text-left px-6">
-                <h3 id="modal-titulo" class="text-xl font-bold text-gray-800 mb-4">Añadir Voluntario</h3>
-                <input type="hidden" id="edit-id">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                        <input type="text" id="input-nombre" class="mt-1 block w-full border rounded-md p-2 shadow-sm focus:ring-[#DA291C] border-gray-300">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Cargo (TES, DUE, MED...)</label>
-                        <input type="text" id="input-cargo" class="mt-1 block w-full border rounded-md p-2 shadow-sm focus:ring-[#DA291C] border-gray-300">
-                    </div>
-                </div>
-                <div class="flex justify-end pt-6 space-x-3">
-                    <button onclick="cerrarModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">Cancelar</button>
-                    <button id="btn-eliminar" onclick="eliminarVoluntario()" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hidden">Eliminar</button>
-                    <button onclick="guardarVoluntario()" class="px-4 py-2 bg-[#DA291C] text-white rounded-lg font-bold">Guardar</button>
-                </div>
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg w-full max-w-sm p-6">
+            <h3 id="modal-titulo" class="text-xl font-bold mb-4"></h3>
+            <input type="hidden" id="edit-id">
+            <div class="space-y-4">
+                <input type="text" id="input-nombre" placeholder="Nombre Voluntario" class="w-full border p-2 rounded">
+                <input type="text" id="input-cargo" placeholder="Cargo (TES, DUE...)" class="w-full border p-2 rounded">
+            </div>
+            <div class="flex justify-end mt-6 space-x-2">
+                <button onclick="cerrarModal()" class="bg-gray-200 px-4 py-2 rounded">Cerrar</button>
+                <button id="btn-eliminar" onclick="eliminarVoluntario()" class="bg-red-100 text-red-600 px-4 py-2 rounded hidden">Borrar</button>
+                <button onclick="guardarVoluntario()" class="bg-[#DA291C] text-white px-4 py-2 rounded">Guardar</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- BASE DE DATOS LOCAL ---
-        let db = JSON.parse(localStorage.getItem('app_servicios_v2')) || {
+        let db = JSON.parse(localStorage.getItem('cr_v3')) || {
             anios: [2024, 2025, 2026],
             anioActivo: 2026,
-            voluntarios: [
-                { id: 1, nombre: "Eneko Saldamando", cargo: "TES", records: { 2024: 14, 2025: 10, 2026: 0 } },
-                { id: 2, nombre: "Iñaki Artigas", cargo: "TT", records: { 2024: 17, 2025: 32, 2026: 0 } }
-            ]
+            voluntarios: []
         };
 
         function save() {
-            localStorage.setItem('app_servicios_v2', JSON.stringify(db));
+            localStorage.setItem('cr_v3', JSON.stringify(db));
             render();
         }
 
-        // --- LÓGICA DE AÑOS ---
-        function cambiarAnioActivo() {
-            db.anioActivo = parseInt(document.getElementById('selectAnio').value);
-            save();
-        }
-
-        function nuevoAnio() {
-            const ultimoAnio = Math.max(...db.anios);
-            const proximo = ultimoAnio + 1;
-            if(confirm(`¿Quieres añadir la columna del año ${proximo}?`)) {
-                db.anios.push(proximo);
-                db.voluntarios.forEach(v => v.records[proximo] = 0);
-                db.anioActivo = proximo;
-                save();
-            }
-        }
-
-        // --- LÓGICA DE VOLUNTARIOS ---
         function render() {
-            const contenedor = document.getElementById('lista-voluntarios');
-            const selectAnio = document.getElementById('selectAnio');
-            
-            // Render select de años
-            selectAnio.innerHTML = db.anios.map(a => `<option value="${a}" ${a==db.anioActivo?'selected':''}>Año ${a}</option>`).join('');
+            const list = document.getElementById('lista-voluntarios');
+            const sel = document.getElementById('selectAnio');
+            sel.innerHTML = db.anios.map(a => `<option value="${a}" ${a==db.anioActivo?'selected':''}>AÑO ${a}</option>`).join('');
 
-            // Render lista
-            contenedor.innerHTML = db.voluntarios.map(v => `
+            if(db.voluntarios.length === 0) {
+                list.innerHTML = `<p class="text-center text-gray-400 mt-10">No hay voluntarios. Pulsa + para añadir.</p>`;
+                return;
+            }
+
+            list.innerHTML = db.voluntarios.map(v => `
                 <div class="bg-white rounded-xl shadow-sm p-4 flex justify-between items-center border-l-4 border-[#DA291C]">
                     <div onclick="abrirModal(${v.id})" class="flex-grow">
                         <h2 class="font-bold text-gray-800">${v.nombre}</h2>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">${v.cargo}</p>
-                        <div class="flex items-baseline space-x-2 mt-1">
-                            <span class="text-2xl font-black text-[#DA291C]">${v.records[db.anioActivo] || 0}</span>
-                            <span class="text-[10px] text-gray-400 italic">servicios en ${db.anioActivo}</span>
-                        </div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">${v.cargo}</p>
+                        <div class="mt-1 text-2xl font-black text-[#DA291C]">${v.records[db.anioActivo] || 0}</div>
                     </div>
-                    <button onclick="sumarUno(${v.id})" class="bg-[#DA291C] active:bg-[#B21C14] text-white w-14 h-14 rounded-2xl shadow-md flex items-center justify-center transition-all active:scale-90">
+                    <button onclick="sumarUno(${v.id})" class="bg-[#DA291C] text-white w-14 h-14 rounded-full shadow-md flex items-center justify-center active:scale-90">
                         <i class="fas fa-plus text-xl"></i>
                     </button>
                 </div>
@@ -122,88 +84,90 @@
         }
 
         function sumarUno(id) {
-            const v = db.voluntarios.find(v => v.id === id);
-            if (!v.records[db.anioActivo]) v.records[db.anioActivo] = 0;
-            v.records[db.anioActivo]++;
-            if (navigator.vibrate) navigator.vibrate(40);
+            const v = db.voluntarios.find(x => x.id === id);
+            v.records[db.anioActivo] = (v.records[db.anioActivo] || 0) + 1;
             save();
         }
 
-        // --- MODAL Y EDICIÓN ---
         function abrirModal(id = null) {
-            const modal = document.getElementById('modal');
+            document.getElementById('modal').classList.remove('hidden');
             const btnEliminar = document.getElementById('btn-eliminar');
-            document.getElementById('edit-id').value = id || '';
-            
             if(id) {
-                const v = db.voluntarios.find(v => v.id === id);
-                document.getElementById('modal-titulo').innerText = "Editar Voluntario";
+                const v = db.voluntarios.find(x => x.id === id);
+                document.getElementById('edit-id').value = id;
                 document.getElementById('input-nombre').value = v.nombre;
                 document.getElementById('input-cargo').value = v.cargo;
+                document.getElementById('modal-titulo').innerText = "Editar";
                 btnEliminar.classList.remove('hidden');
             } else {
-                document.getElementById('modal-titulo').innerText = "Nuevo Voluntario";
+                document.getElementById('edit-id').value = '';
                 document.getElementById('input-nombre').value = '';
                 document.getElementById('input-cargo').value = '';
+                document.getElementById('modal-titulo').innerText = "Nuevo Voluntario";
                 btnEliminar.classList.add('hidden');
             }
-            
-            modal.classList.remove('opacity-0', 'pointer-events-none');
         }
 
-        function cerrarModal() {
-            document.getElementById('modal').classList.add('opacity-0', 'pointer-events-none');
-        }
+        function cerrarModal() { document.getElementById('modal').classList.add('hidden'); }
 
         function guardarVoluntario() {
             const id = document.getElementById('edit-id').value;
-            const nombre = document.getElementById('input-nombre').value;
-            const cargo = document.getElementById('input-cargo').value;
-
-            if(!nombre) return alert("Escribe un nombre");
+            const n = document.getElementById('input-nombre').value;
+            const c = document.getElementById('input-cargo').value;
+            if(!n) return;
 
             if(id) {
-                const v = db.voluntarios.find(v => v.id == id);
-                v.nombre = nombre;
-                v.cargo = cargo;
+                const v = db.voluntarios.find(x => x.id == id);
+                v.nombre = n; v.cargo = c;
             } else {
-                const nuevo = {
-                    id: Date.now(),
-                    nombre: nombre,
-                    cargo: cargo,
-                    records: {}
-                };
-                db.anios.forEach(a => nuevo.records[a] = 0);
-                db.voluntarios.push(nuevo);
+                let recs = {}; db.anios.forEach(a => recs[a] = 0);
+                db.voluntarios.push({ id: Date.now(), nombre: n, cargo: c, records: recs });
             }
-            save();
-            cerrarModal();
+            save(); cerrarModal();
         }
 
         function eliminarVoluntario() {
-            const id = document.getElementById('edit-id').value;
-            if(confirm("¿Seguro que quieres borrar a esta persona?")) {
-                db.voluntarios = db.voluntarios.filter(v => v.id != id);
-                save();
-                cerrarModal();
+            if(confirm("¿Borrar voluntario?")) {
+                db.voluntarios = db.voluntarios.filter(x => x.id != document.getElementById('edit-id').value);
+                save(); cerrarModal();
             }
         }
 
-        function exportarCSV() {
-            let lineas = ["Nombre,Cargo," + db.anios.join(",")];
-            db.voluntarios.forEach(v => {
-                let r = [v.nombre, v.cargo];
-                db.anios.forEach(a => r.push(v.records[a] || 0));
-                lineas.push(r.join(","));
-            });
-            const blob = new Blob([lineas.join("\n")], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = `servicios_total_${new Date().toLocaleDateString()}.csv`;
-            a.click();
+        function cambiarAnioActivo() {
+            db.anioActivo = parseInt(document.getElementById('selectAnio').value);
+            save();
         }
 
-        if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+        function nuevoAnio() {
+            const prox = Math.max(...db.anios) + 1;
+            if(confirm("¿Crear columna para el año " + prox + "?")) {
+                db.anios.push(prox);
+                db.voluntarios.forEach(v => v.records[prox] = 0);
+                db.anioActivo = prox;
+                save();
+            }
+        }
+
+        function exportarExcel() {
+            // Cabecera del CSV: Nombre, Cargo, 2024, 2025...
+            let csv = "\uFEFF"; // BOM para que Excel detecte tildes
+            csv += "VOLUNTARI@S;CARGO;" + db.anios.join(";") + "\n";
+            
+            db.voluntarios.forEach(v => {
+                let fila = [v.nombre, v.cargo];
+                db.anios.forEach(a => {
+                    fila.push(v.records[a] || 0);
+                });
+                csv += fila.join(";") + "\n";
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "Servicios_CR.csv");
+            link.click();
+        }
+
         render();
     </script>
 </body>

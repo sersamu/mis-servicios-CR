@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gestión de Voluntarios</title>
+    <title>Servicios CR</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,13 +14,13 @@
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
 
-    <nav class="bg-indigo-700 text-white p-4 shadow-md sticky top-0 z-40 flex justify-between items-center">
+    <nav class="bg-[#DA291C] text-white p-4 shadow-md sticky top-0 z-40 flex justify-between items-center">
         <div>
-            <h1 class="text-lg font-bold leading-tight">Servicios Ambulancia</h1>
-            <select id="selectAnio" onchange="cambiarAnioActivo()" class="bg-indigo-800 text-xs border-none rounded px-2 py-1 outline-none">
+            <h1 class="text-lg font-bold leading-tight">Servicios CR</h1>
+            <select id="selectAnio" onchange="cambiarAnioActivo()" class="bg-[#B21C14] text-xs border-none rounded px-2 py-1 outline-none">
                 </select>
         </div>
-        <button onclick="abrirModal()" class="bg-white text-indigo-700 p-2 rounded-full shadow-lg">
+        <button onclick="abrirModal()" class="bg-white text-[#DA291C] p-2 rounded-full shadow-lg">
             <i class="fas fa-user-plus"></i>
         </button>
     </nav>
@@ -29,7 +29,7 @@
         </div>
 
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-around items-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-        <button onclick="nuevoAnio()" class="text-indigo-600 text-xs font-bold uppercase flex flex-col items-center">
+        <button onclick="nuevoAnio()" class="text-[#DA291C] text-xs font-bold uppercase flex flex-col items-center">
             <i class="fas fa-calendar-plus text-xl mb-1"></i>Nuevo Año
         </button>
         <button onclick="exportarCSV()" class="text-green-600 text-xs font-bold uppercase flex flex-col items-center">
@@ -46,17 +46,17 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                        <input type="text" id="input-nombre" class="mt-1 block w-full border rounded-md p-2 shadow-sm focus:ring-indigo-500 border-gray-300">
+                        <input type="text" id="input-nombre" class="mt-1 block w-full border rounded-md p-2 shadow-sm focus:ring-[#DA291C] border-gray-300">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Cargo (TES, DUE, MED...)</label>
-                        <input type="text" id="input-cargo" class="mt-1 block w-full border rounded-md p-2 shadow-sm focus:ring-indigo-500 border-gray-300">
+                        <input type="text" id="input-cargo" class="mt-1 block w-full border rounded-md p-2 shadow-sm focus:ring-[#DA291C] border-gray-300">
                     </div>
                 </div>
                 <div class="flex justify-end pt-6 space-x-3">
                     <button onclick="cerrarModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">Cancelar</button>
                     <button id="btn-eliminar" onclick="eliminarVoluntario()" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hidden">Eliminar</button>
-                    <button onclick="guardarVoluntario()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold">Guardar</button>
+                    <button onclick="guardarVoluntario()" class="px-4 py-2 bg-[#DA291C] text-white rounded-lg font-bold">Guardar</button>
                 </div>
             </div>
         </div>
@@ -105,16 +105,16 @@
 
             // Render lista
             contenedor.innerHTML = db.voluntarios.map(v => `
-                <div class="bg-white rounded-xl shadow-sm p-4 flex justify-between items-center border-l-4 border-indigo-500">
+                <div class="bg-white rounded-xl shadow-sm p-4 flex justify-between items-center border-l-4 border-[#DA291C]">
                     <div onclick="abrirModal(${v.id})" class="flex-grow">
                         <h2 class="font-bold text-gray-800">${v.nombre}</h2>
                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">${v.cargo}</p>
                         <div class="flex items-baseline space-x-2 mt-1">
-                            <span class="text-2xl font-black text-indigo-600">${v.records[db.anioActivo] || 0}</span>
+                            <span class="text-2xl font-black text-[#DA291C]">${v.records[db.anioActivo] || 0}</span>
                             <span class="text-[10px] text-gray-400 italic">servicios en ${db.anioActivo}</span>
                         </div>
                     </div>
-                    <button onclick="sumarUno(${v.id})" class="bg-indigo-600 active:bg-indigo-800 text-white w-14 h-14 rounded-2xl shadow-md flex items-center justify-center transition-all active:scale-90">
+                    <button onclick="sumarUno(${v.id})" class="bg-[#DA291C] active:bg-[#B21C14] text-white w-14 h-14 rounded-2xl shadow-md flex items-center justify-center transition-all active:scale-90">
                         <i class="fas fa-plus text-xl"></i>
                     </button>
                 </div>

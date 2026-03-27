@@ -1,22 +1,22 @@
 {
-  "name": "Servicios CR ",
-  "short_name": "Servicios CR ",
-  "start_url": "index.html?v=2",
+  "name": "Servicios CR",
+  "short_name": "Servicios CR",
+  "description": "Control de servicios Cruz Roja",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "background_color": "#DA291C",
   "theme_color": "#DA291C",
   "icons": [
     {
-      "src": "https://i.imgur.com/8N4N5fK.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
       "src": "https://i.imgur.com/uP2jP4D.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.imgur.com/8N4N5fK.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ]
 }

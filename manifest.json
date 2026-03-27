@@ -1,15 +1,22 @@
 {
   "name": "Servicios CR",
   "short_name": "Servicios CR",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#DA291C",
   "icons": [
     {
-      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAC80lEQVR4nO2dS04CQRRF76Yx6sq4AsuQDAtXonGkNq7AmYmD6SChm0YTY6KJ76Spxv9S99Yp6tS979Yp6tS977Zpmn8+HA6Hw+FwOBwOh8PhcDj+S9u2f9m27Xfbtv8Z67fbtv3L0K7/Xv6XFvHw8vKy2u12m8lkstpsNpvdbrfdbref9/v9Zzqdruu6vjscDofD8YXY7/f7XpIk93Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx/EnpZTy8PDw8pEkyUvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+fsXpZTy8PDwYmU6na7ruk7H43F9PB7Xx+NxfTwe18fjcX08HtfH43F9PB7Xx+NxfTwe18fjcX08Ht9Xp9PputVut9tsNpvdbrfdbref9/v9Zzqdruu6vjscDofD8YXY7/f7XpIk93Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx/EnpZTy8PDw8pEkyUvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+fsXpZTy8PDwYmU6na7ruk7H43F9PB7Xx+NxfTwe18fjcX08HtfH43F9PB7Xx+NxfTwe18fjcX08Ht9Xp9PputVut9tsNpvdbrfdbref9/v9Zzqdruu6vjscDofD8YXY7/f7XpIk93Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx3Ecx/EnpZTy8PDw8pEkyUvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+XvO+fsXpZTy8PDwYmU6na7ruk7H43F9PB7Xx+NxfTwe18fjcX08HtfH43F9PB7Xx+NxfTwe18fjcX08Ht9Xp9PputVut9tsNpvdbrfdbref9/v9Zzqdruu6vjscDofD8YX4BcY9An9p8/P0AAAAAElFTkSuQmCC",
-      "sizes": "96x96",
-      "type": "image/png"
+      "src": "https://i.imgur.com/8N4N5fK.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.imgur.com/uP2jP4D.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

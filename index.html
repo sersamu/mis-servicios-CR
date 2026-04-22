@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Servicios CR - Nube</title>
-    <link rel="apple-touch-icon" href="./icono-192.png?v=3">
-    <link rel="icon" type="image/png" sizes="192x192" href="./icono-192.png?v=3">
-    <link rel="icon" type="image/png" sizes="512x512" href="./icono-512.png?v=3">
-    <link rel="manifest" href="manifest.json?v=3">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="./icono-192.png?v=3">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icono-192.png?v=3">
+    <link rel="manifest" href="manifest.json?v=3">
 </head>
 <body class="bg-gray-100 min-h-screen pb-32">
 
@@ -53,13 +51,12 @@
 
     <script>
         /** * CONFIGURACIÓN DE FIREBASE 
-         * PEGA TU URL ENTRE LAS COMILLAS (debe terminar en /)
+         * Asegúrate de que tu URL esté aquí dentro y termine en /
          */
-        const FIREBASE_URL = "https://servicios-cr-default-rtdb.europe-west1.firebasedatabase.app/"; 
+        const FIREBASE_URL = "TU_URL_DE_FIREBASE_AQUI/"; 
         
         let db = { anios: [2024, 2025, 2026], anioActivo: 2026, voluntarios: {} };
 
-        // CONECTAR CON LA NUBE
         async function fetchData() {
             try {
                 const response = await fetch(FIREBASE_URL + ".json");
@@ -78,7 +75,6 @@
             }
         }
 
-        // GUARDAR CAMBIOS EN LA NUBE
         async function sync() {
             try {
                 await fetch(FIREBASE_URL + ".json", {
@@ -113,9 +109,14 @@
                             <span class="ml-1 text-[9px] text-gray-400 font-bold italic uppercase">Servicios</span>
                         </div>
                     </div>
-                    <button onclick="sumarUno('${v.id}')" class="bg-[#DA291C] text-white w-14 h-14 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform">
-                        <i class="fas fa-plus text-2xl"></i>
-                    </button>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="restarUno('${v.id}')" class="bg-gray-100 text-gray-500 w-10 h-10 rounded-xl flex items-center justify-center active:scale-90 transition-transform border border-gray-200">
+                            <i class="fas fa-minus text-sm"></i>
+                        </button>
+                        <button onclick="sumarUno('${v.id}')" class="bg-[#DA291C] text-white w-14 h-14 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform">
+                            <i class="fas fa-plus text-2xl"></i>
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -128,80 +129,16 @@
             await sync();
         }
 
+        async function restarUno(id) {
+            if(!db.voluntarios[id].records) db.voluntarios[id].records = {};
+            const actual = db.voluntarios[id].records[db.anioActivo] || 0;
+            if (actual > 0) {
+                db.voluntarios[id].records[db.anioActivo] = actual - 1;
+                if(navigator.vibrate) navigator.vibrate(30);
+                await sync();
+            }
+        }
+
         function abrirModal(id = null) {
             document.getElementById('modal').classList.remove('hidden');
-            const btnEliminar = document.getElementById('btn-eliminar');
-            if(id) {
-                const v = db.voluntarios[id];
-                document.getElementById('edit-id').value = id;
-                document.getElementById('input-nombre').value = v.nombre;
-                document.getElementById('input-cargo').value = v.cargo || '';
-                document.getElementById('modal-titulo').innerText = "Editar Ficha";
-                btnEliminar.classList.remove('hidden');
-            } else {
-                document.getElementById('edit-id').value = '';
-                document.getElementById('input-nombre').value = '';
-                document.getElementById('input-cargo').value = '';
-                document.getElementById('modal-titulo').innerText = "Nuevo Voluntario";
-                btnEliminar.classList.add('hidden');
-            }
-        }
-
-        function cerrarModal() { document.getElementById('modal').classList.add('hidden'); }
-
-        async function guardarVoluntario() {
-            const id = document.getElementById('edit-id').value || "v" + Date.now();
-            const n = document.getElementById('input-nombre').value.trim();
-            const c = document.getElementById('input-cargo').value.trim();
-            if(!n) return;
-
-            if(!db.voluntarios[id]) db.voluntarios[id] = { records: {} };
-            db.voluntarios[id].nombre = n;
-            db.voluntarios[id].cargo = c;
-            
-            await sync();
-            cerrarModal();
-        }
-
-        async function eliminarVoluntario() {
-            const id = document.getElementById('edit-id').value;
-            if(confirm("¿Eliminar de la nube para todos?")) {
-                delete db.voluntarios[id];
-                await sync();
-                cerrarModal();
-            }
-        }
-
-        function cambiarAnioActivo() {
-            db.anioActivo = parseInt(document.getElementById('selectAnio').value);
-            render();
-        }
-
-        async function nuevoAnio() {
-            const prox = Math.max(...db.anios) + 1;
-            if(confirm("¿Crear año " + prox + " para todo el equipo?")) {
-                db.anios.push(prox);
-                db.anioActivo = prox;
-                await sync();
-            }
-        }
-
-        function exportarExcel() {
-            let csv = "\uFEFFVOLUNTARI@S;CARGO;" + db.anios.join(";") + "\n";
-            Object.values(db.voluntarios).sort((a,b) => a.nombre.localeCompare(b.nombre)).forEach(v => {
-                let fila = [v.nombre, v.cargo];
-                db.anios.forEach(a => fila.push(v.records ? (v.records[a] || 0) : 0));
-                csv += fila.join(";") + "\n";
-            });
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-            a.download = "Servicios_CR_Nube.csv";
-            a.click();
-        }
-
-        // Refrescar automáticamente cada 10 segundos para ver cambios de otros
-        setInterval(fetchData, 10000);
-        fetchData();
-    </script>
-</body>
-</html>
+            const btnEliminar = document.getElementById
